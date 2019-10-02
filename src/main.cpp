@@ -54,7 +54,7 @@ void mqtt_connect()
 #ifdef CFG_MQTT_USER
     if (mqtt_client.connect(clientId.c_str(),CFG_MQTT_USER,CFG_MQTT_PWD))
 #else
-    if (client.connect(clientId.c_str()))
+    if (mqtt_client.connect(clientId.c_str()))
 #endif
     {
       Serial.println("connected");
