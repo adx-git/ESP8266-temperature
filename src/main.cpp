@@ -58,8 +58,6 @@ void mqtt_connect()
 #endif
     {
       Serial.println("connected");
-     //once connected to MQTT broker, subscribe command if any
-      mqtt_client.subscribe("OsoyooCommand");
     } else {
       Serial.print("failed, rc=");
       Serial.print(mqtt_client.state());
