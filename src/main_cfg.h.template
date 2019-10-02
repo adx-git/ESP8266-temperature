@@ -1,0 +1,13 @@
+/* Definitions for the DHT22 sensor */
+// Define NodeMCU D3 pin to as temperature data pin of  DHT2
+#define CFG_DHTPIN D3
+#define CFG_DHTTYPE    DHT22     // DHT 22 (AM2302)
+
+/* MQTT broker settings */
+#define CFG_MQTT_USER ""
+#define CFG_MQTT_PWD ""
+#define CFG_MQTT_SERVER ""
+
+/* WLAN configuration */
+#define CFG_SSID ""
+#define CFG_PWD ""
