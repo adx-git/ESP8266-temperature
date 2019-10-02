@@ -48,13 +48,14 @@ void mqtt_connect()
   {
     Serial.print("Attempting MQTT connection...");
     // Create a random client ID
-    String clientId = "ESP8266Client-";
-    clientId += String(random(0xffff), HEX);
-    // Attempt to connect
-    //if you MQTT broker has clientID,username and password
-    //please change following line to    if (client.connect(clientId,userName,passWord))
-    //if (client.connect(clientId.c_str()))
+    String clientId = CFG_CLIENT_PREFIX;
+    clientId += "_DHT22-";
+
+#ifdef CFG_MQTT_USER
     if (mqtt_client.connect(clientId.c_str(),CFG_MQTT_USER,CFG_MQTT_PWD))
+#else
+    if (client.connect(clientId.c_str()))
+#endif
     {
       Serial.println("connected");
      //once connected to MQTT broker, subscribe command if any

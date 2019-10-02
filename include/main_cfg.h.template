@@ -4,9 +4,10 @@
 #define CFG_DHTTYPE    DHT22     // DHT 22 (AM2302)
 
 /* MQTT broker settings */
-#define CFG_MQTT_USER ""
+#define CFG_MQTT_USER  /* leave undefined if the broker has no user configured */
 #define CFG_MQTT_PWD ""
 #define CFG_MQTT_SERVER ""
+#define CFG_CLIENT_PREFIX "test" /* Prefix for different ESP8266 sensors, cou can set a prefix for each room or device */
 
 /* WLAN configuration */
 #define CFG_SSID ""
