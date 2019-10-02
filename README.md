@@ -20,6 +20,7 @@ Since this script had some failures and was using an outdated and undefined DHT 
 * add a more flexible configuration
 * add further instructions and pictures about ESP8266 connectivity
 * add instructions about MQTT broker settings
+* profide example for IOBroker
 * add error handling
 * Send ESP8266 into deep sleep
 * and more ...
