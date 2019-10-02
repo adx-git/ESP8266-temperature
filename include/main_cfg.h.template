@@ -8,7 +8,7 @@
 #define CFG_MQTT_PWD ""
 #define CFG_MQTT_SERVER ""
 #define CFG_CLIENT_PREFIX "test" /* Prefix for different ESP8266 sensors, cou can set a prefix for each room or device */
-#define CFG_TOPIC_PREFIX "myhome/og/arbeitszimmer" /* The topic prefix is used as part of the topic name it can define the location of your sensor "myhome/groundfloor/livingroom" */
+#define CFG_TOPIC_PREFIX "myhome/og/arbeitszimmer/" /* The topic prefix is used as part of the topic name it can define the location of your sensor "myhome/groundfloor/livingroom" */
 
 /* WLAN configuration */
 #define CFG_SSID ""

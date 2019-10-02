@@ -49,7 +49,7 @@ void mqtt_connect()
     Serial.print("Attempting MQTT connection...");
     // Create a random client ID
     String clientId = CFG_CLIENT_PREFIX;
-    clientId += "_DHT22-";
+    clientId += "_ESP8266-DHT22";
 
 #ifdef CFG_MQTT_USER
     if (mqtt_client.connect(clientId.c_str(),CFG_MQTT_USER,CFG_MQTT_PWD))
@@ -102,7 +102,7 @@ void loop()
     msg.toCharArray(MsgTemp,25); 
          
     humidity = dht.readHumidity();
-    msg = String(humidity) + "%";
+    msg = String(humidity);
     msg.toCharArray(MsgHumidity,25);     
           
     mqtt_client.publish(TempTopic, MsgTemp);
