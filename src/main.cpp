@@ -8,28 +8,32 @@
 DHT dht(CFG_DHTPIN, CFG_DHTTYPE);
 
 
-// Update these with values suitable for your network.
+/* WLAN configuration */
 const char* ssid = CFG_SSID;
 const char* password = CFG_PWD;
+
+/*  MQTT Server 
+    Note: The implementation is expecting the MQTT broker at port 1883
+*/
 const char* mqtt_server = CFG_MQTT_SERVER;
 
 WiFiClient espClient;
-PubSubClient client(espClient);
+PubSubClient mqtt_client(espClient);
 long lastMsg = 0;
 char msg[50];
 int value = 0;
 
 void setup_wifi() {
-   delay(100);
+  delay(100);
   // We start by connecting to a WiFi network
-    Serial.print("Connecting to ");
-    Serial.println(ssid);
-    WiFi.begin(ssid, password);
-    while (WiFi.status() != WL_CONNECTED) 
-    {
-      delay(500);
-      Serial.print(".");
-    }
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) 
+  {
+    delay(500);
+    Serial.print(".");
+  }
   randomSeed(micros());
   Serial.println("");
   Serial.println("WiFi connected");
@@ -37,10 +41,10 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());
 }
 
-void reconnect() 
+void mqtt_connect() 
 {
   // Loop until we're reconnected
-  while (!client.connected()) 
+  while (!mqtt_client.connected()) 
   {
     Serial.print("Attempting MQTT connection...");
     // Create a random client ID
@@ -50,15 +54,15 @@ void reconnect()
     //if you MQTT broker has clientID,username and password
     //please change following line to    if (client.connect(clientId,userName,passWord))
     //if (client.connect(clientId.c_str()))
-    if (client.connect(clientId.c_str(),CFG_MQTT_USER,CFG_MQTT_PWD))
+    if (mqtt_client.connect(clientId.c_str(),CFG_MQTT_USER,CFG_MQTT_PWD))
     {
       Serial.println("connected");
      //once connected to MQTT broker, subscribe command if any
-      client.subscribe("OsoyooCommand");
+      mqtt_client.subscribe("OsoyooCommand");
     } else {
       Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
+      Serial.print(mqtt_client.state());
+      Serial.println(" try again in 6 seconds");
       // Wait 6 seconds before retrying
       delay(6000);
     }
@@ -70,37 +74,39 @@ void setup()
   Serial.begin(115200);
   dht.begin();
   setup_wifi();
-  client.setServer(mqtt_server, 1883);
+  mqtt_client.setServer(mqtt_server, 1883);
 }
 
 void loop() 
 {
-  if (!client.connected()) {
-    reconnect();
+  if (!mqtt_client.connected()) {
+    mqtt_connect();
   }
-  client.loop();
+  
+  mqtt_client.loop();
   long now = millis();
-  // read DHT11 sensor every 6 seconds
+  
+  // read DHT sensor every 10 seconds
+  /* TODO: this looks like a potential overflow, will be different once we send the device into deep sleep */
   if (now - lastMsg > 10000) {
-     lastMsg = now;
+    lastMsg = now;
     
-     String msg="";
-     char MsgTemp[25];
-     char MsgFeutigkeit[25];
-     float temperature, humidity;    
+    String msg="";
+    char MsgTemp[25];
+    char MsgHumidity[25];
+    float temperature, humidity;    
  
-     temperature = dht.readTemperature();
-     msg = String(temperature);
-     msg.toCharArray(MsgTemp,25); 
+    temperature = dht.readTemperature();
+    msg = String(temperature);
+    msg.toCharArray(MsgTemp,25); 
          
-     humidity = dht.readHumidity();
-     msg = String(humidity) + "%";
-     msg.toCharArray(MsgFeutigkeit,25);     
+    humidity = dht.readHumidity();
+    msg = String(humidity) + "%";
+    msg.toCharArray(MsgHumidity,25);     
           
-     client.publish("Temp", MsgTemp);
-     Serial.print(MsgTemp);
-     client.publish("Feuchtigkeit", MsgFeutigkeit);
-     Serial.print(MsgFeutigkeit);
-
+    mqtt_client.publish("Temp", MsgTemp);
+    Serial.print(MsgTemp);
+    mqtt_client.publish("Feuchtigkeit", MsgHumidity);
+    Serial.print(MsgHumidity);
   }
 }
