@@ -91,6 +91,8 @@ void loop()
     lastMsg = now;
     
     String msg="";
+    const char TempTopic[] = {CFG_TOPIC_PREFIX  "Temperature"};
+    const char HumidityTopic[] = {CFG_TOPIC_PREFIX  "Humidity"};
     char MsgTemp[25];
     char MsgHumidity[25];
     float temperature, humidity;    
@@ -103,9 +105,9 @@ void loop()
     msg = String(humidity) + "%";
     msg.toCharArray(MsgHumidity,25);     
           
-    mqtt_client.publish("Temp", MsgTemp);
+    mqtt_client.publish(TempTopic, MsgTemp);
     Serial.print(MsgTemp);
-    mqtt_client.publish("Feuchtigkeit", MsgHumidity);
+    mqtt_client.publish(HumidityTopic, MsgHumidity);
     Serial.print(MsgHumidity);
   }
 }
